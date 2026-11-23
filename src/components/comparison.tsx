@@ -1,0 +1,42 @@
+import { useRef, useState } from 'react';
+import { Img } from './img';
+import { ArrowLeftRight, BookOpen, Monitor, Check, ShieldCheck, X } from 'lucide-react';
+import { motion } from 'motion/react';
+const old = [['அவசரமாக எழுதுவது', 'கூட்ட நெரிசலில் பெயர்கள் பிழையாகும் வாய்ப்பு அதிகம்.'], ['பெயர் தேடுவதில் சிரமம்', 'நூற்றுக்கணக்கான பக்கங்களை ஒவ்வொன்றாக புரட்ட வேண்டும்.'], ['மொய் தொகைப் பிழைகள்', 'நள்ளிரவில் கணக்கு கூட்டும்போது தொகை வித்தியாசம் வரலாம்.'], ['நோட்டு சேதம்', 'மொய் நோட்டு தொலைந்து போதல் அல்லது கிழிந்து போதல்.']];
+const fresh = [['மொய் ரசீது மற்றும் WhatsApp குறுஞ்செய்தி', 'விருந்தினருக்கு உடனுக்குடன் தகவல்'], ['நொடியில் பெயர் தேடல்', 'மொபைல் app-ல் உறவினர் பெயரை விரைவாக தேடலாம்.'], ['ஊர் / பெயர் வாரியாக மொய் நோட்டு', 'விசேஷம் முடிந்த அன்றே அச்சிட்ட புத்தகம்.'], ['Android app & Cloud backup', 'உங்கள் மொபைலில் பாதுகாப்பாக இருக்கும்.'], ['OTP பாதுகாப்பு சரிபார்ப்பு', 'ரசீது வழங்கிய பிறகு, OTP சரிபார்ப்புடன் மட்டுமே மொய் பதிவுகளைத் திருத்தலாம்.']];
+export function Comparison() {
+   const [value, setValue] = useState(50); const stage = useRef<HTMLDivElement>(null);
+   function drag(e: React.PointerEvent<HTMLDivElement>) { if (!e.currentTarget.hasPointerCapture(e.pointerId)) return; const r = stage.current!.getBoundingClientRect(); setValue(Math.min(100, Math.max(0, ((e.clientX - r.left) / r.width) * 100))); }
+   return <div className="compare-wrap">
+      <div className="vs">
+         <motion.div className="vs-col vs-old" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .2 }} transition={{ duration: .7 }}>
+            <h3 lang="ta">பழைய முறை · கையெழுத்து நோட்டு</h3>
+            <ul>{old.map(([a, b]) => <li key={a}><X size={20} /><span><b lang="ta">{a}</b><span lang="ta">{b}</span></span></li>)}</ul>
+            <p className="vs-verdict" lang="ta">நேர விரயம், மன உளைச்சல், கணக்கு குழப்பம்.</p>
+         </motion.div>
+         <motion.div className="vs-col vs-new" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .2 }} transition={{ duration: .7, delay: .12 }}>
+            <h3 lang="ta">மொய் Soft · கணினி மொய் மேலாண்மை</h3>
+            <ul>{fresh.map(([a, b], i) => <li key={a}>{i === fresh.length - 1 ? <ShieldCheck size={20} /> : <Check size={20} />}<span><b lang="ta">{a}</b><span lang="ta">{b}</span></span></li>)}</ul>
+            <p className="vs-verdict" lang="ta">தெளிவான கணக்கு, அமைதியான மனம், கௌரவமான பதிவு.</p>
+         </motion.div>
+      </div>
+      <div className="comparison-experience">
+         <div className="comparison-heading"><div><span className="eyebrow">ONE CELEBRATION. TWO WAYS.</span><h3>From handwritten pages to clear records.</h3></div><div className="comparison-modes" aria-label="Comparison view">{[['Notebook', 100], ['Compare', 50], ['Digital', 0]].map(([label, position]) => <button type="button" key={label} aria-pressed={Math.round(value) === position} onClick={() => setValue(Number(position))}>{label}</button>)}</div></div>
+         <div className="compare-stage" ref={stage} onPointerMove={drag} onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); drag(e); }} onPointerUp={e => { if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); }}>
+            <div className="record-scene digital-scene" aria-hidden="true">
+               <div className="scene-label digital-label"><Monitor size={16} /> THE DIGITAL WAY <span>Organised. Instantly.</span></div>
+               <div className="digital-photo-wrap"><Img src="/images/the-digital-way.png" alt="" fill className="digital-photo" /></div>
+            </div>
+            <div className="record-scene notebook-scene pane-paper-clip" style={{ clipPath: `inset(0 ${100 - value}% 0 0)` }} aria-hidden="true">
+               <div className="scene-label notebook-label"><BookOpen size={16} /> THE TRADITIONAL WAY <span>One page at a time.</span></div>
+               <div className="notebook-photo-wrap"><Img src="/images/handwritten-ledger.png" alt="" fill className="notebook-photo" /></div>
+            </div>
+            <div className="divider" style={{ left: `${value}%` }} aria-hidden="true"><span><ArrowLeftRight size={22} /></span><b className="divider-hint">DRAG</b></div>
+         </div>
+         <div className="comparison-controls"><label className="slider-label" htmlFor="comparison-slider"><span><BookOpen size={16} /> Notebook</span><strong>Slide to see the difference</strong><span>Digital <Monitor size={16} /></span></label>
+            <input id="comparison-slider" className="comparison-slider" type="range" min="0" max="100" value={Math.round(value)} onChange={e => setValue(Number(e.target.value))} aria-label="Traditional notebook visibility" aria-valuetext={`${Math.round(value)}% notebook, ${100 - Math.round(value)}% digital records`} />
+         </div>
+      </div>
+
+   </div>;
+}
