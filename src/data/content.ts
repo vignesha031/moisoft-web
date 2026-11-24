@@ -180,15 +180,7 @@ export const franchises: Franchise[] = [
     contact1: ['+918610576031', '+91 86105 76031'],
     contact2: ['+918838060904', '+91 88380 60904'],
   },
-  {
-    id: 'franchise-5',
-    name: 'லேசர் மொய் Soft',
-    area: 'கருமாத்தூர்',
-    manager: 'LASER  PANDI',
-    degree: 'MCA',
-    contact1: ['+919843939705', '+91 98439 39705'],
-    contact2: ['+917708779821', '+91 77087 79821'],
-  },
+ 
   {
     id: 'franchise-4',
     name: 'ஏலம் மணக்கும் போடி மொய் Soft',
